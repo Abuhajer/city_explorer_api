@@ -17,15 +17,15 @@ app.get('/', (reqeust, response) => {
   response.send('Home Page Welcome to express');
 });
 
-// app.get('/location', (request, response) => {
-//   const locationData = require('./data/location.json');
-//   const city = request.query.city;
-//   let location;
-//   locationData.forEach(locationData => {
-//     location = new Location(city, locationData);
-//   });
-//   response.json(location);
-// });
+app.get('/location', (request, response) => {
+  const locationData = require('./data/location.json');
+  const city = request.query.city;
+  let location;
+  locationData.forEach(locationData => {
+    location = new Location(city, locationData);
+  });
+  response.json(location);
+});
 
 // app.get('/restaurant', (request, response) => {
 //   const restaurantsData = require('./data/restaurants.json');
@@ -42,13 +42,13 @@ app.use('*', (request, resp) => {
 })
 
 
-// // Constructor
-// function Location(city, locationData) {
-//   this.search_query = city;
-//   this.formated_query = locationData.display_name;
-//   this.latitude = locationData.lat;
-//   this.longitude = locationData.lon;
-// }
+// Constructor
+function Location(city, locationData) {
+  this.search_query = city;
+  this.formated_query = locationData.display_name;
+  this.latitude = locationData.lat;
+  this.longitude = locationData.lon;
+}
 
 // function Restaurant(restaurantData) {
 //   this.resturant = restaurantData.restaurant.name;
