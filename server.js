@@ -22,9 +22,13 @@ app.get('/location', (request, response) => {
   const city = request.query.city;
   let location;
   locationData.forEach(locationData => {
-    location = new Location(city, locationData);
+    let display=locationData.display_name.split(',');
+    if(city===display[0].toLowerCase())
+    {
+      location = new Location(city, locationData);
+      response.json(location);
+    }
   });
-  response.json(location);
 });
 
 // app.get('/restaurant', (request, response) => {
@@ -45,7 +49,7 @@ app.use('*', (request, resp) => {
 // Constructor
 function Location(city, locationData) {
   this.search_query = city;
-  this.formated_query = locationData.display_name;
+  this.formatted_query = locationData.display_name;
   this.latitude = locationData.lat;
   this.longitude = locationData.lon;
 }
