@@ -23,7 +23,7 @@ app.get('/location', (request, response) => {
   let location;
   locationData.forEach(locationData => {
     let display=locationData.display_name.split(',');
-    if(city===display[0])
+    if(city===display[0].toLowerCase())
       location = new Location(city, locationData);
   });
   response.json(location);
