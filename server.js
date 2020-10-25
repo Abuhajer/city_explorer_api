@@ -24,9 +24,11 @@ app.get('/location', (request, response) => {
   locationData.forEach(locationData => {
     let display=locationData.display_name.split(',');
     if(city===display[0].toLowerCase())
+    {
       location = new Location(city, locationData);
+      response.json(location);
+    }
   });
-  response.json(location);
 });
 
 // app.get('/restaurant', (request, response) => {
