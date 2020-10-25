@@ -35,13 +35,13 @@ app.get('/weather', (request, response) => {
   const city = request.query.city;
   let weather = [];
   weatherData.data.forEach(locationData => {
-    // let display=locationData.display_name.split(',');
     if (city === weatherData['city_name'].toLowerCase()) {
       weather.push(new Weather(locationData));
     }
-    response.json(weather);
 
   });
+  response.json(weather);
+
 });
 
 app.use('*', (request, resp) => {
