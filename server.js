@@ -22,24 +22,27 @@ app.get('/location', (request, response) => {
   const city = request.query.city;
   let location;
   locationData.forEach(locationData => {
-    let display=locationData.display_name.split(',');
-    if(city===display[0].toLowerCase())
-    {
+    let display = locationData.display_name.split(',');
+    if (city === display[0].toLowerCase()) {
       location = new Location(city, locationData);
       response.json(location);
     }
   });
 });
 
-// app.get('/restaurant', (request, response) => {
-//   const restaurantsData = require('./data/restaurants.json');
-//   // console.log(restaurantsData);
-//   let data = [];
-//   restaurantsData.nearby_restaurants.forEach(restaurant => {
-//     data.push(new Restaurant(restaurant));
-//   });
-//   response.json(data);
-// });
+app.get('/weather', (request, response) => {
+  const weatherData = require('./data/weather.json');
+  const city = request.query.city;
+  let weather = [];
+  weatherData.data.forEach(locationData => {
+    // let display=locationData.display_name.split(',');
+    if (city === weatherData['city_name'].toLowerCase()) {
+      weather.push(new Weather(locationData));
+    }
+    response.json(weather);
+
+  });
+});
 
 app.use('*', (request, resp) => {
   resp.status(404).send('Not found');
@@ -54,9 +57,9 @@ function Location(city, locationData) {
   this.longitude = locationData.lon;
 }
 
-// function Restaurant(restaurantData) {
-//   this.resturant = restaurantData.restaurant.name;
-//   this.location = restaurantData.restaurant.location.city;
-// }
+function Weather(weatherData) {
+  this.forecast = weatherData.weather.description;
+  this.time = weatherData.datetime;
+}
 
 app.listen(PORT, () => console.log(`App is listening on port ${PORT}`));
