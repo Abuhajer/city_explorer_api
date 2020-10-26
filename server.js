@@ -4,6 +4,7 @@
 const express = require('express');
 const cors = require('cors')
 require('dotenv').config()
+let error=true;
 
 
 const PORT = process.env.PORT || 3000;
@@ -25,11 +26,15 @@ app.get('/location', (request, response) => {
     let display = locationData.display_name.split(',');
     if (city === display[0].toLowerCase()) {
       location = new Location(city, locationData);
+      error=false;
       response.json(location);
     }
   });
+  if (error)
+  {
+    response.json(message());
+  }
 });
-
 app.get('/weather', (request, response) => {
   const weatherData = require('./data/weather.json');
   const city = request.query.city;
@@ -37,17 +42,26 @@ app.get('/weather', (request, response) => {
   weatherData.data.forEach(locationData => {
     if (city === weatherData['city_name'].toLowerCase()) {
       weather.push(new Weather(locationData));
+      error=false;
     }
 
   });
-  response.json(weather);
-
+  if (error)
+    response.json(weather);
+  else
+    response.json(message());
 });
 
 app.use('*', (request, resp) => {
-  resp.status(404).send('Not found');
+  resp.status(500).send('Not found');
 })
 
+function message() {
+  let status=500;
+  let responseText='Sorry,something went wrong'
+  let message={status:status,responseText:responseText};
+  return message;
+}
 
 // Constructor
 function Location(city, locationData) {
