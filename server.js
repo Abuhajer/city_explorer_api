@@ -46,7 +46,7 @@ app.get('/weather', (request, response) => {
     }
 
   });
-  if (error)
+  if (!error)
     response.json(weather);
   else
     response.json(message());
