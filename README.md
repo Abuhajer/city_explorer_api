@@ -2,23 +2,27 @@
 
  Project Name
 
-**Author**: Your Name Goes Here
-**Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
+**Author**: Ahmad Abuhajer
+**Version**: 1.0.8
 
 ## Overview
-<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
+Some people want sometime to check some country to travil to , so they go search for wather maybe in somewabsite and maybe they want what there trils in these city or where its placed , so our website provide all these 
 
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
-
+nothing , just the front-end page and they need copy the url code for background in heroku "https://cityexploerabuhajer.herokuapp.com/" and start work
 ## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
-
+we used in this a 3 API for get the data from hikingproject to get the trails,locationiq to get locations and weatherbit to get weather status 
+by using superAgent 
 ## Change Log
-<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
+Oct 25, 2020 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource.
+Oct 25, 2020 10:00pm - Make a fix in lovation.
+Oct 26, 2020 02:00am - Add a GET route for the weather resource.
+Oct 26, 2020 10:00am - Add handle for bad respnse.
+Oct 26, 2020 4:00pm - Add Api for location and weather.
+Oct 26, 2020 5:30pm - Add Api for trails and refactor the code.
 
-01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource.
 
 ## Credits and Collaborations
-<!-- Give credit (and a link) to other people or resources that helped you build this application. -->
--->
+https://www.weatherbit.io/api
+https://my.locationiq.com/
+https://www.hikingproject.com/data
