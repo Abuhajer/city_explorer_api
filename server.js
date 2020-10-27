@@ -8,15 +8,19 @@ require('dotenv').config()
 const PORT = process.env.PORT || 3000;
 const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY;
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
-const TRAIL_API_KEY= process.env.TRAIL_API_KEY;
+const TRAIL_API_KEY = process.env.TRAIL_API_KEY;
+const DATABASE_URL = process.env.DATABASE_URL;
 const app = express();
+const pg = require('pg');
+const client = new pg.Client(DATABASE_URL);
+client.connect();
 //--------------
 app.use(cors());
 
 //---------------
 // Routes
 app.get('/weather', getWeather)
-app.get('/',welcomePage)
+app.get('/', welcomePage)
 app.get('/location', getLocation)
 app.get('/trails', getTrails)
 
@@ -26,19 +30,33 @@ app.use('*', (request, resp) => {
 //-------------------------------------
 //functions
 
-function welcomePage(request, response){
+function welcomePage(request, response) {
   response.send('Home Page Welcome to express');
 }
 //----
-function getLocation(request, response){
+function getLocation(request, response) {
   const city = request.query.city;
-  const url = `https://eu1.locationiq.com/v1/search.php?key=${GEOCODE_API_KEY}&q=${city}&format=json`;
   let location;
-  superagent.get(url).then(locationData => {
-    location = new Location(city, locationData.body[0]);
-    response.json(location);
+  const findLocation = 'SELECT * FROM locations WHERE search_query=$1;';
+  const safeArray = [city];
+  client.query(findLocation, safeArray).then(result => {
+    if (result.rows!==[]) {
+      location = new Location(city, result.rows[0]);
+      console.log('from Database');
+      response.json(location);
+    }
   }).catch(() => {
-    response.status(500).send('Sorry,something went wrong');
+    const url = `https://eu1.locationiq.com/v1/search.php?key=${GEOCODE_API_KEY}&q=${city}&format=json`;
+    superagent.get(url).then(locationData => {
+      location = new Location(city, locationData.body[0]);
+      console.log('from API');
+      const insertLocation = 'INSERT INTO locations (search_query,display_name,lat,lon) VALUES ($1,$2,$3,$4)';
+      const safeArray = [location.search_query, location.formatted_query, location.latitude, location.longitude];
+      client.query(insertLocation, safeArray)
+      response.json(location);
+    }).catch(() => {
+      response.status(500).send('Sorry,something went wrong');
+    })
   })
 }
 //----
@@ -58,7 +76,7 @@ function getWeather(request, response) {
   })
 }
 //----
-function getTrails(request, response){
+function getTrails(request, response) {
   const longitude = request.query.longitude;
   const latitude = request.query.latitude;
   const url = `https://www.hikingproject.com/data/get-trails?lat=${latitude}&lon=${longitude}&key=${TRAIL_API_KEY}`;
@@ -86,17 +104,17 @@ function Weather(weatherData) {
   this.time = weatherData.datetime;
 }
 
-function Trail(trailData){
-  this.name=trailData.name;
-  this.location=trailData.location;
-  this.length=trailData.length;
-  this.stars=trailData.stars;
-  this.star_votes=trailData.starVotes;
-  this.summary=trailData.summary;
-  this.trail_url=trailData.url;
-  this.conditions=trailData.conditionStatus;
-  this.condition_date=trailData.conditionDate.split(' ')[0];
-  this.condition_time=trailData.conditionDate.split(' ')[1];
+function Trail(trailData) {
+  this.name = trailData.name;
+  this.location = trailData.location;
+  this.length = trailData.length;
+  this.stars = trailData.stars;
+  this.star_votes = trailData.starVotes;
+  this.summary = trailData.summary;
+  this.trail_url = trailData.url;
+  this.conditions = trailData.conditionStatus;
+  this.condition_date = trailData.conditionDate.split(' ')[0];
+  this.condition_time = trailData.conditionDate.split(' ')[1];
 
 }
 
