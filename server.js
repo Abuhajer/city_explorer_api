@@ -1,6 +1,6 @@
 'use strict';
 
-// Defining Application Dependencies
+// Defining Application Dependenciess
 const express = require('express');
 const superagent = require('superagent');
 const cors = require('cors')
